@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Giganteum — Every individual tree, monitored</title>
+<meta name="description" content="Giganteum is a nonprofit that finds and assesses individual trees in satellite, aerial and drone imagery.">
+<link rel="stylesheet" href="css/site.css">
+</head>
+</head>
+<body>
+
+<div class="wrap">
+<nav>
+  <a class="wordmark" href="#top">giganteum<span>.</span></a>
+  <button class="menu" id="menu" aria-label="Open menu" aria-expanded="false" aria-controls="links">
+    <svg width="20" height="14" viewBox="0 0 20 14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M0 1h20M0 7h20M0 13h20"/></svg>
+  </button>
+  <div class="links" id="links">
+    <a href="#trees">Trees</a>
+    <a href="#aerial">Aerial surveys</a>
+    <a href="#beyond">Beyond trees</a>
+    <a href="#contact">Contact</a>
+  </div>
+</nav>
+</div>
+
+<main id="main">
+
+<header class="wrap" id="top">
+<section class="hero">
+  <div class="hero-copy" id="hero-copy">
+    <div class="eyebrow">A nonprofit for individual tree monitoring</div>
+    <h1>Every individual tree, monitored.</h1>
+    <p>We find and assess individual trees in satellite, aerial and drone imagery. We're building a record that follows each tree across captures, so changes can be examined over time.</p>
+    <div class="cta">
+      <a class="btn btn-primary" href="mailto:hello@giganteum.org?subject=Demo%20request">Request a demo</a>
+      <a class="btn" href="mailto:hello@giganteum.org?subject=Build%20with%20us">Build with us</a>
+      <a class="textlink" href="#trees">How it works</a>
+    </div>
+  </div>
+  <div class="scene" id="hero-scene">
+    <canvas id="c-hero" aria-label="Illustration: a canopy of tree crowns with detections marked, one crown flagged and followed across captures" role="img"></canvas>
+    <button class="pause" id="pause" aria-pressed="false" aria-label="Pause animations" title="Pause animations">
+      <svg class="i-pause" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><rect x="1.5" y="1" width="3" height="10" fill="currentColor"/><rect x="7.5" y="1" width="3" height="10" fill="currentColor"/></svg>
+      <svg class="i-play" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 1l9 5-9 5z" fill="currentColor"/></svg>
+    </button>
+    <div class="record" id="record">
+      <div class="head"><b>Tree record</b><i>Illustrative record</i></div>
+      <div class="row" data-f="id"><span>Tree</span><span></span></div>
+      <div class="row status" data-f="status"><span>Status</span><span></span></div>
+      <div class="row" data-f="cls"><span>Class</span><span></span></div>
+      <div class="row" data-f="crown"><span>Crown</span><span></span></div>
+      <div class="row" data-f="pos"><span>Position</span><span></span></div>
+      <div class="row" data-f="caps"><span>Captures</span><span></span></div>
+      <div class="row" data-f="sensors"><span>Sensors</span><span></span></div>
+      <div class="hist-label" id="hist-label">History</div>
+      <div class="hist" id="hist"></div>
+    </div>
+  </div>
+</section>
+
+<div class="col-label how">How it works</div>
+<div class="loop">
+  <div><b><em>1</em>Anchor</b><p>A high-resolution capture establishes an initial estimate of each tree's location, crown and class.</p></div>
+  <div><b><em>2</em>Watch</b><p>Frequent, coarser imagery is read at those known crowns.</p></div>
+  <div><b><em>3</em>Reconcile</b><p>Link observations across dates and sources where alignment supports a match.</p></div>
+  <div><b><em>4</em>Assess</b><p>Mortality, decline, inventory and change, per tree.</p></div>
+</div>
+</header>
+
+<section class="wrap block" id="trees">
+  <div class="grid">
+    <div class="c4 lead">
+      <h2>What we can do on your imagery now, and what we are building toward.</h2>
+      <p>Three things we can deliver on a new site within weeks, and two we are building.</p>
+    </div>
+    <div class="c4">
+      <div class="col-label">Available now</div>
+      <div class="item"><em>01</em><div><b>Locate and count individual trees</b><p>Drone, aerial or 30 cm satellite. Each tree becomes a point with an estimated crown size and a confidence.</p></div></div>
+      <div class="item"><em>02</em><div><b>Find dead trees</b><p>Identify likely dead trees for review. This is the most reliable thing we do.</p></div></div>
+      <div class="item"><em>03</em><div><b>Sort trees by class</b><p>Mature from young, one species group from another, using examples reviewed with your team.</p></div></div>
+    </div>
+    <div class="c4">
+      <div class="col-label">In development</div>
+      <div class="item"><em>04</em><div><b>A history per tree</b><p>Every capture of the same crown, across sensors and years, on one record.</p></div></div>
+      <div class="item"><em>05</em><div><b>Early warning</b><p>We are researching whether repeated observations can reveal decline earlier.</p></div></div>
+      <div class="pull">We are a nonprofit, and we run like a startup: small, fast, and on your side.</div>
+    </div>
+  </div>
+  <p class="fine">Where the imagery can't support a claim about one tree, we say so and report at stand level.</p>
+</section>
+
+<section class="wrap block" id="adapts" style="padding-top:0">
+  <div class="grid">
+    <div class="c8 lead" style="max-width:640px">
+      <h2>How it adapts to your site</h2>
+      <p>A model trained on one forest usually struggles on the next, and on different imagery or a different season. We take a detector from open data down to your domain: your sensor, your forest, your season. Three stages.</p>
+    </div>
+  </div>
+  <div class="stages">
+    <div><em>Stage 1</em><b>Our own base models</b><p>Trained in-house on crown annotations from around the world, across resolutions, so one model handles drone, aerial and satellite imagery.</p><small>Starting point for everything below.</small></div>
+    <div><em>Stage 2</em><b>Aligned to your domain</b><p>We correct the model's output on a sample of your own imagery and train on those corrections. Correcting is much faster than labeling from scratch, so this takes days rather than months.</p><small>We measure the review effort needed on your imagery.</small></div>
+    <div><em>Stage 3</em><b>Frozen, measured, improved on your terms</b><p>We freeze and version the model so results remain reproducible. We check each new capture on a reviewed sample before relying on its predictions. When an update helps, we test and release a new version.</p><small>Each capture is checked on a reviewed sample.</small></div>
+  </div>
+  <p class="measured">Every step is scored on imagery held back from training, and we show you the numbers. It works with the imagery you already have, or we help you get it: drone flights, public aerial archives with years of history, or 30 cm commercial satellite imagery when you need to cover a lot of ground.</p>
+</section>
+
+<section class="wrap block" id="aerial" style="border-top:1px solid var(--rule)">
+  <div class="aerial-grid">
+    <div class="aerial-scene" id="aerial-scene">
+      <canvas id="c-aerial" role="img" aria-label="Illustration: survey frames over savanna, most empty, animals detected in the rest"></canvas>
+      <button class="pause" aria-pressed="false" aria-label="Pause animations" title="Pause animations">
+      <svg class="i-pause" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><rect x="1.5" y="1" width="3" height="10" fill="currentColor"/><rect x="7.5" y="1" width="3" height="10" fill="currentColor"/></svg>
+      <svg class="i-play" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 1l9 5-9 5z" fill="currentColor"/></svg>
+    </button>
+      <div class="tally" id="tally">
+        <div><b id="t-frames">0</b><span>frames reviewed</span></div>
+        <div><b id="t-empty">0</b><span>empty, skipped</span></div>
+        <div><b id="t-animals">0</b><span>detections</span></div>
+      </div>
+    </div>
+    <div class="aerial-copy">
+      <div class="sec-head"><div class="eyebrow">Aerial wildlife surveys</div>
+      <h2>Most survey frames are empty. We find the ones that aren't.</h2></div>
+      <div class="sec-body"><p>A survey flight produces tens of thousands of frames, and the bulk of the work is looking at nothing. Our pipeline discards the empty frames, finds the animals in the rest, and sorts them by species.</p>
+      <p>It is built for surveys that change: new regions, seasons, aircraft and camera setups it has never seen, without retraining from scratch. Before Giganteum, our team built and ran this kind of pipeline on national-scale surveys.</p>
+      <p><a class="textlink" href="mailto:hello@giganteum.org?subject=Aerial%20survey">Tell us about your survey</a></p></div>
+    </div>
+  </div>
+</section>
+
+<section class="wrap block" id="beyond" style="border-top:1px solid var(--rule)">
+  <div class="beyond-grid">
+    <div class="beyond-copy">
+      <div class="sec-head"><div class="eyebrow">Beyond trees</div>
+      <h2>The same team, pointed at your problem.</h2></div>
+      <div class="sec-body"><p>Trees are the mission. When a project fits what we know and helps fund that mission, we take it on. What we know is building models that keep working after they leave the lab: in new places, new seasons, and on imagery nobody trained them for.</p>
+      <p>Before Giganteum, our team spent twenty years at this: identifying individual animals in photographs from camera traps, dive cameras, drones and survey aircraft; counting wildlife across whole landscapes from the air; mapping habitat from satellite; and building the datasets, pipelines and agentic research tooling behind it. That work is in daily use by thousands of researchers across more than a hundred species.</p>
+      <p class="bridge">What that experience covers:</p>
+      <ul class="beyond-list">
+        <li><b>ML systems that survive deployment.</b> <span>Inference, quality checks, monitoring and validation for models in daily use.</span></li>
+        <li><b>Detection, classification and individual re-identification</b> <span>from overhead and ground imagery.</span></li>
+        <li><b>Large scientific datasets.</b> <span>Curation, provenance, security and the tooling to review them.</span></li>
+        <li><b>Feasibility, proposals and program strategy</b> <span>for conservation and remote-sensing work.</span></li>
+      </ul>
+      <p>We show you how it works and how we check it.</p></div>
+    </div>
+    <div class="beyond-scene" id="beyond-scene">
+      <canvas id="c-beyond" role="img" aria-label="Illustration: detections in six kinds of imagery: forest, savanna and city streets from above, open water from a boat, a reef from a dive, a trail from a camera trap"></canvas>
+      <button class="pause" aria-pressed="false" aria-label="Pause animations" title="Pause animations">
+      <svg class="i-pause" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><rect x="1.5" y="1" width="3" height="10" fill="currentColor"/><rect x="7.5" y="1" width="3" height="10" fill="currentColor"/></svg>
+      <svg class="i-play" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 1l9 5-9 5z" fill="currentColor"/></svg>
+    </button>
+    </div>
+  </div>
+</section>
+
+<section class="wrap block who" id="who">
+  <div class="eyebrow" style="margin-bottom:22px">Who we are</div>
+    <p>Giganteum is a small nonprofit with a startup's metabolism: a small team, no bureaucracy, twenty years of conservation technology behind us and trees ahead.</p>
+  <p>Those years were spent building the whole stack: new algorithms and the research behind them, data gathered from every continent, and models for detection, classification and re-identification that run in the field every day. We're bringing that experience to individual-tree monitoring.</p>
+    </section>
+
+<section class="wrap block contact" id="contact">
+  <h2>Try it on a place you care about</h2>
+  <p>If there is a forest, a park or a city you care about and some imagery of it, we'll run a session and show you what comes out, and what it would take to run inside your own systems. If you are building tools of your own, or want to join the mission, we'd like to hear from you.</p>
+  <div class="cta" style="margin-top:28px">
+    <a class="btn btn-primary" href="mailto:hello@giganteum.org?subject=Demo%20request">Request a demo</a>
+    <a class="btn" href="mailto:hello@giganteum.org?subject=Build%20with%20us">Build with us</a>
+  </div>
+</section>
+
+<div class="wrap">
+<footer>
+  <div>© 2026 Giganteum, Inc. — a 501(c)(3) nonprofit.</div>
+  <div>Every individual tree, monitored.</div>
+</footer>
+</div>
+</main>
+
+<script src="js/engine.js" defer></script>
+<script src="js/scene-hero.js" defer></script>
+<script src="js/scene-aerial.js" defer></script>
+<script src="js/scene-beyond.js" defer></script>
+<script src="js/main.js" defer></script>
+</body>
+</html>
