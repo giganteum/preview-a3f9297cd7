@@ -1,7 +1,7 @@
 /* Boot: menu, then register whichever scenes loaded; hero first, the rest in idle time. */
 (function(G){
 'use strict';
-const {motion,freeze,idle,ticker}=G;
+const {motion,freeze,idle,ticker,clamp}=G;
 /* ---------- menu ---------- */
 const menu=document.getElementById('menu'), links=document.getElementById('links');
 const setMenu=o=>{ links.classList.toggle('open',o); menu.setAttribute('aria-expanded',o); menu.setAttribute('aria-label',o?'Close menu':'Open menu'); };
@@ -25,6 +25,14 @@ function boot(){
   const note=document.getElementById('note-ew'); if(note) note.hidden=!want.trees2;
   for(const key of ['trees','trees2','adapts']){ const el=document.getElementById('draft-'+key); if(!el) continue; const v=want[key];
     if(!v||!S.draft){ el.hidden=true; continue; } el.hidden=false; el.dataset.v=v; reg('draft-'+key,el,()=>S.draft(v,'c-draft-'+key)); if(freeze) ticker.prebuild('draft-'+key); }
+  // v3 and v4 share a visual language; seen together they crowd. As v3 comes up the screen, v4
+  // recedes (scroll-linked, rect-measured, never blocks scrolling; off under reduced motion/freeze).
+  const f4=document.getElementById('draft-trees2'), f3=document.getElementById('draft-adapts');
+  if(f4&&f3&&!f4.hidden&&!f3.hidden&&!freeze){ let raf=0;
+    const fade=()=>{ raf=0; if(motion.reduce){ f4.style.opacity=''; return; }
+      const vh=innerHeight, p=clamp((vh*.95-f3.getBoundingClientRect().top)/(vh*.45),0,1); f4.style.opacity=p?String(1-.9*p):''; };
+    const req=()=>{ if(!raf) raf=requestAnimationFrame(fade); };
+    addEventListener('scroll',req,{passive:true}); addEventListener('resize',req); motion.on(req); req(); }
   if(freeze){ ticker.prebuild('hero'); ticker.prebuild('aerial'); ticker.prebuild('beyond'); document.documentElement.dataset.frozen='1'; return; }
   // one pause for every scene; each moving scene carries a copy of the control, kept in sync
   const pauses=[...document.querySelectorAll('.pause')];
