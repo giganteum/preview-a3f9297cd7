@@ -42,7 +42,7 @@ function boot(){
   if(freeze){ ticker.prebuild('hero'); ticker.prebuild('aerial'); ticker.prebuild('beyond'); document.documentElement.dataset.frozen='1'; return; }
   // one pause for every scene; each moving scene carries a copy of the control, kept in sync
   const pauses=[...document.querySelectorAll('.pause')];
-  const sync=()=>{ for(const b of pauses){ b.hidden=motion.reduce; b.setAttribute('aria-pressed',motion.paused); const l=motion.paused?'Play animations':'Pause animations'; b.setAttribute('aria-label',l); b.title=l; } };
+  const sync=()=>{ document.documentElement.classList.toggle('motion-paused',motion.paused); for(const b of pauses){ b.hidden=motion.reduce; b.setAttribute('aria-pressed',motion.paused); const l=motion.paused?'Play animations':'Pause animations'; b.setAttribute('aria-label',l); b.title=l; } };
   for(const b of pauses) b.addEventListener('click',()=>{ motion.paused=!motion.paused; motion.emit(); });
   motion.on(sync);
   motion.on(()=>{ if(!motion.reduce) return; for(const k in apis){ const a=apis[k]; if(a&&a.still){ try{ a.still(); }catch(e){ console.error(k,e); } } } });

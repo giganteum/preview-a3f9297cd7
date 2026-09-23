@@ -328,10 +328,20 @@ footer{border-top:1px solid var(--rule);padding:26px 0 40px;display:flex;justify
   .record .row,.record .hist-label{opacity:1;transform:none}
   .record .row span:last-child{transition:color .35s}
   .record .row:not(.on) span:last-child{color:transparent!important;position:relative}
-  .record .row:not(.on) span:last-child::after{content:'—';position:absolute;right:0;color:var(--dim);opacity:.5}
+  .record .row:not(.on) span:last-child::after{content:'—';position:absolute;right:0;color:var(--dim);opacity:.5;
+    transform-origin:right center;animation:dash-wait 1.8s ease-in-out infinite}
+  /* a slow wave down the empty record: each dash brightens and grows a little, row after row */
+  .record .row[data-f="status"] span:last-child::after{animation-delay:.12s}
+  .record .row[data-f="cls"] span:last-child::after{animation-delay:.24s}
+  .record .row[data-f="crown"] span:last-child::after{animation-delay:.36s}
+  .record .row[data-f="pos"] span:last-child::after{animation-delay:.48s}
+  .record .row[data-f="caps"] span:last-child::after{animation-delay:.6s}
+  .record .row[data-f="sensors"] span:last-child::after{animation-delay:.72s}
+  html.motion-paused .record .row span:last-child::after{animation-play-state:paused}
 }
 @media (max-width:640px){ .draft-band[data-v="1"]{height:470px} .draft-band[data-v="2"],.draft-band[data-v="3"]{height:190px} .draft-band[data-v="4"]{height:300px} }
 @media (max-width:560px){ .beyond-scene{height:480px} .loop{grid-template-columns:1fr} .loop div{padding-right:0} .cta .btn{width:100%} .tally{gap:14px} }
-@media (prefers-reduced-motion:reduce){ html{scroll-behavior:auto} .record .row,.record .hist{transition:none} }
+@keyframes dash-wait{0%,70%,100%{opacity:.45;transform:none}25%{opacity:.9;transform:scaleX(1.2) scaleY(1.15)}}
+@media (prefers-reduced-motion:reduce){ html{scroll-behavior:auto} .record .row,.record .hist{transition:none} .record .row span:last-child::after{animation:none!important} }
 /* ?freeze=1: deterministic frames for screenshot tests */
 html.freeze *,html.freeze *::before,html.freeze *::after{transition:none!important;animation:none!important;scroll-behavior:auto!important}
