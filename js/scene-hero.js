@@ -13,8 +13,11 @@ function heroInit(){
   const SPR=makeSprites(5,24,20,58); const TW=2600, TH=2000; const crowns=[];
   for(let i=0;i<2200;i++){ const si=Math.min(SPR.length-1,Math.floor(Math.pow(r(),.8)*SPR.length)); crowns.push({x:r()*TW,y:r()*TH,si,r:SPR[si].r,id:i,tint:null,tk:0}); }
   let mobile=false, copyRight=0, copyBottom=0;
-  function measure(){ mobile=matchMedia('(max-width: 900px)').matches; const cr=canvas.getBoundingClientRect(), tr=copy.getBoundingClientRect(); copyRight=tr.right-cr.left; copyBottom=tr.bottom-cr.top; }
+  function measure(){ mobile=matchMedia('(max-width: 1000px)').matches; const cr=canvas.getBoundingClientRect(), tr=copy.getBoundingClientRect(); copyRight=tr.right-cr.left; copyBottom=tr.bottom-cr.top; }
   measure();
+  // the text exclusion depends on the copy block, which can reflow without the canvas changing size
+  // (fonts arriving, copy edits, text zoom): re-measure when it does
+  if('ResizeObserver' in window) new ResizeObserver(()=>{ measure(); onLayout(); draw(); }).observe(copy);
   const leftB=y=>{ if(mobile) return -400; let b=copyRight+22; if(y>copyBottom-40) b=Math.max(S.W*.36,b-(y-(copyBottom-40))*1.25); return b+20*Math.sin(y/80)+12*Math.sin(y/33+1.3); };
   const topB=x=>(mobile?14:10)+18*Math.sin(x/110)+10*Math.sin(x/43+2);
   const botB=x=>S.H-(mobile?12:22)+(mobile?0:Math.min(40,Math.max(0,(x-S.W*.7)*.12)))-16*Math.sin(x/95+.7)-10*Math.sin(x/41);
@@ -46,11 +49,14 @@ function heroInit(){
   // the loop
   const PH={calm:2.4,turn:2.6,lock:1.1,card:3.2,hold:3.2,release:.9};
   let phase='calm', pt=0, tplIdx=0, focus=null, tpl=TPL[0];
-  function pick(){ for(let k=0;k<80;k++){ const c=crowns[r()*crowns.length|0]; if(c.r<34||c.tint) continue; const [sx,sy]=spos(c); if(sx<40||sx>S.W-60||sy<40||sy>S.H-40) continue; if(!mobile&&sx>S.W-340&&sy>S.H-400) continue; if(mobile&&sy>S.H*.55) continue; if(inside(sx,sy,c.r)>40) return c; } return null; }
+  // the record's rectangle in canvas coordinates, padded; followed crowns stay clear of it
+  function cardHit(sx,sy,rr){ const cr=canvas.getBoundingClientRect(), k=rec.getBoundingClientRect(); const p=18;
+    return sx+rr>k.left-cr.left-p&&sx-rr<k.right-cr.left+p&&sy+rr>k.top-cr.top-p&&sy-rr<k.bottom-cr.top+p; }
+  function pick(){ for(let k=0;k<80;k++){ const c=crowns[r()*crowns.length|0]; if(c.r<34||c.tint) continue; const [sx,sy]=spos(c); if(sx<40||sx>S.W-60||sy<40||sy>S.H-40) continue; if(!mobile&&sx>S.W-340&&sy>S.H-400) continue; if(mobile&&sy>S.H-60) continue; if(cardHit(sx,sy,c.r)) continue; if(inside(sx,sy,c.r)>40) return c; } return null; }
   // Deterministic fallback: the best-placed eligible crown on screen, so a static composition
   // always has a tree and a card (review V3); constraints relax only as far as they must.
   function pickBest(){ let best=null, bd=20;
-    for(const c of crowns){ if(c.r<30||c.tint) continue; const [sx,sy]=spos(c); if(sx<40||sx>S.W-60||sy<40||sy>S.H-40) continue; if(!mobile&&sx>S.W-340&&sy>S.H-400) continue; if(mobile&&sy>S.H*.55) continue; const d=inside(sx,sy,c.r); if(d>bd){ bd=d; best=c; } }
+    for(const c of crowns){ if(c.r<30||c.tint) continue; const [sx,sy]=spos(c); if(sx<40||sx>S.W-60||sy<40||sy>S.H-40) continue; if(!mobile&&sx>S.W-340&&sy>S.H-400) continue; if(mobile&&sy>S.H-60) continue; if(cardHit(sx,sy,c.r)) continue; const d=inside(sx,sy,c.r); if(d>bd){ bd=d; best=c; } }
     return best; }
   function next(){ tpl=TPL[tplIdx%TPL.length]; tplIdx++; focus=pick(); if(!focus){ phase='calm'; pt=0; return; } phase=tpl.tint?'turn':'lock'; pt=0; }
   // after a resize the island boundary moves; if the followed tree is no longer inside it, drop it and restart the loop
@@ -76,7 +82,7 @@ function heroInit(){
       // leader line from the tree to the card
       if(phase!=='release'){ const cr=canvas.getBoundingClientRect(), rr2=rec.getBoundingClientRect(); const k=clamp((phase==='card'?pt:9)/.5,0,1);
         ctx.save(); ctx.globalAlpha=k; ctx.strokeStyle='#A8761F'; ctx.lineWidth=1.2; ctx.beginPath();
-        let ex,ey; if(mobile){ ex=rr2.left-cr.left+rr2.width*.5; ey=rr2.top-cr.top; const my=fy+rr+Math.max(12,(ey-fy-rr)*.5); ctx.moveTo(fx,fy+rr); ctx.lineTo(fx,my); ctx.lineTo(ex,my); ctx.lineTo(ex,ey); }
+        let ex,ey; if(rr2.top-cr.top>=S.H-2){ ex=rr2.left-cr.left+rr2.width*.5; ey=rr2.top-cr.top; const my=fy+rr+Math.max(12,(ey-fy-rr)*.5); ctx.moveTo(fx,fy+rr); ctx.lineTo(fx,my); ctx.lineTo(ex,my); ctx.lineTo(ex,ey); }
         else { ex=rr2.left-cr.left; ey=rr2.top-cr.top+rr2.height*.5; const tx=fx+(ex>fx?rr:-rr); const mx=tx+(ex-tx)*.5; ctx.moveTo(tx,fy); ctx.lineTo(mx,fy); ctx.lineTo(mx,ey); ctx.lineTo(ex,ey); }
         ctx.stroke(); ctx.fillStyle='#A8761F'; ctx.beginPath(); ctx.arc(ex,ey,2.5,0,TAU); ctx.fill(); ctx.restore(); } }
   }

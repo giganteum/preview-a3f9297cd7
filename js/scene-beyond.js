@@ -47,7 +47,7 @@ function beyondInit(){
     return []; }
   const TILES=['forest','savanna','sea','reef','trap','streets'];
   let t=0; const lock={}; // per tile: {key, since}
-  function draw(){ const W=S.W,H=S.H, cols=3, rows=2, gap=6, tw=(W-gap*(cols-1))/cols, th=(H-gap*(rows-1))/rows; const sc=tw/ZW, zh=th/sc; ctx.clearRect(0,0,W,H);
+  function draw(){ const W=S.W,H=S.H, cols=W<520?2:3, rows=6/cols, gap=6, tw=(W-gap*(cols-1))/cols, th=(H-gap*(rows-1))/rows; const sc=tw/ZW, zh=th/sc; ctx.clearRect(0,0,W,H);
     TILES.forEach((k,i)=>{ const z=zones[k]; const x=(i%cols)*(tw+gap), y=Math.floor(i/cols)*(th+gap); const L=lock[k]||(lock[k]={key:null,since:0});
       ctx.save(); ctx.beginPath(); ctx.rect(x,y,tw,th); ctx.clip(); let target=null;
       if(z.view==='overhead'){ const img=raster(z,th); const d=(t*8+i*130)%ZW; ctx.drawImage(img.c,x-d,y,ZW,th); ctx.drawImage(img.c,x-d+ZW,y,ZW,th);

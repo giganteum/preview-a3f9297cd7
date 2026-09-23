@@ -155,6 +155,7 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:26px 0
 /* ---------- hero ---------- */
 .hero{position:relative;min-height:min(720px,calc(100svh - 190px));display:flex;flex-direction:column}
 .hero-copy{position:relative;z-index:2;max-width:620px;padding:40px 0 60px;display:flex;flex-direction:column;gap:26px}
+.hero-head,.hero-body{display:flex;flex-direction:column;gap:26px}
 .hero-copy p{font-size:clamp(17px,1.4vw,19px);max-width:52ch;color:var(--dim)}
 .cta{display:flex;gap:14px;align-items:center;flex-wrap:wrap;padding-top:4px}
 .scene{position:absolute;inset:0;z-index:1}
@@ -168,7 +169,7 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:26px 0
 .pause:hover{color:var(--ink)}
 .pause[hidden]{display:none}
 .beyond-scene .pause{top:auto;bottom:8px;right:8px}
-.record{position:absolute;right:0;bottom:44px;z-index:3;width:290px;opacity:0;transform:translateY(6px);transition:opacity .45s,transform .45s;padding:16px 18px 12px;background:rgba(243,239,228,.94);border:1px solid var(--rule);font-size:13px;line-height:1.35}
+.record{position:absolute;right:0;bottom:44px;z-index:3;width:290px;opacity:0;transform:translateY(6px);transition:opacity .45s,transform .45s;padding:16px 18px 12px;background:var(--paper);border:1px solid var(--rule);font-size:13px;line-height:1.35}
 .record.show{opacity:1;transform:none}
 .record .hist-label{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--dim);padding:10px 0 0;border-top:1px solid var(--rule);opacity:0;transition:opacity .4s}
 .record .hist-label.on{opacity:1}
@@ -271,6 +272,14 @@ footer{border-top:1px solid var(--rule);padding:26px 0 40px;display:flex;justify
   .sec-head{order:1}.aerial-scene,.beyond-scene{order:2}.sec-body{order:3}
   .aerial-scene{width:calc(100% + 2*var(--gutter));margin:0 calc(-1 * var(--gutter));height:420px}
   .beyond-scene{width:100%;height:360px}
+  /* hero: eyebrow + headline -> canopy -> body; the record sits under the canopy, not over it */
+  .hero{min-height:0}
+  .hero-copy{display:contents}
+  .hero-head{order:1;padding:16px 0 0}
+  #hero-scene{order:2;position:relative;height:var(--hero-canvas-h);margin:26px calc(-1 * var(--gutter)) 0;--hero-canvas-h:420px}
+  .hero-body{order:3;padding:28px 0 8px}
+  #hero-scene .pause{top:calc(var(--hero-canvas-h) - 48px);bottom:auto;left:var(--gutter);right:auto}
+  .record{right:var(--gutter);bottom:16px;width:250px;font-size:12.5px}
   .aerial-scene .pause{right:var(--gutter)}
 }
 @media (max-width:900px){
@@ -278,15 +287,20 @@ footer{border-top:1px solid var(--rule);padding:26px 0 40px;display:flex;justify
   .links.open{display:flex}
   .links a{padding:12px 18px}
   .menu{display:inline-flex}
-  .hero{min-height:0}
-  .hero-copy{padding:16px 0 8px;max-width:none}
-  .scene{position:relative;height:420px;margin:0 calc(-1 * var(--gutter))}
-  #hero-scene .pause{top:auto;bottom:12px;left:var(--gutter);right:auto}
-  .record{right:var(--gutter);bottom:0;width:250px;font-size:12.5px}
-  .caption{position:static;padding:10px 0 4px}
+  /* without JavaScript the menu button cannot work, so the links stay in the page */
+  html:not(.js) .menu{display:none}
+  html:not(.js) .links{display:flex;position:static;flex-direction:row;flex-wrap:wrap;gap:4px 20px;border:0;background:none;padding:0;min-width:0}
+  html:not(.js) .links a{padding:4px 0}
+  html:not(.js) nav{flex-wrap:wrap;gap:12px}
   .loop{grid-template-columns:1fr 1fr}
 }
-@media (max-width:560px){ .loop{grid-template-columns:1fr} .loop div{padding-right:0} .cta .btn{width:100%} .tally{gap:14px} }
+@media (max-width:560px){
+  /* phones: the record would cover the canopy, so it moves under it and the leader line drops into it */
+  #hero-scene{height:auto;--hero-canvas-h:340px}
+  #hero-scene canvas{position:relative;height:var(--hero-canvas-h)}
+  .record{position:relative;right:auto;bottom:auto;margin:0 var(--gutter) 0 auto}
+}
+@media (max-width:560px){ .beyond-scene{height:480px} .loop{grid-template-columns:1fr} .loop div{padding-right:0} .cta .btn{width:100%} .tally{gap:14px} }
 @media (prefers-reduced-motion:reduce){ html{scroll-behavior:auto} .record .row,.record .hist{transition:none} }
 /* ?freeze=1: deterministic frames for screenshot tests */
 html.freeze *,html.freeze *::before,html.freeze *::after{transition:none!important;animation:none!important;scroll-behavior:auto!important}

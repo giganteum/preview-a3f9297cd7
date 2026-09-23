@@ -4,8 +4,10 @@
 const {motion,freeze,idle,ticker}=G;
 /* ---------- menu ---------- */
 const menu=document.getElementById('menu'), links=document.getElementById('links');
-menu.addEventListener('click',()=>{ const o=links.classList.toggle('open'); menu.setAttribute('aria-expanded',o); });
-links.addEventListener('click',e=>{ if(e.target.tagName==='A'){ links.classList.remove('open'); menu.setAttribute('aria-expanded','false'); } });
+const setMenu=o=>{ links.classList.toggle('open',o); menu.setAttribute('aria-expanded',o); menu.setAttribute('aria-label',o?'Close menu':'Open menu'); };
+menu.addEventListener('click',()=>setMenu(!links.classList.contains('open')));
+links.addEventListener('click',e=>{ if(e.target.tagName==='A') setMenu(false); });
+document.addEventListener('keydown',e=>{ if(e.key==='Escape'&&links.classList.contains('open')){ setMenu(false); menu.focus(); } });
 
 /* ---------- progressive start: hero first, the rest while the reader reads ---------- */
 function boot(){
