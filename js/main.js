@@ -25,12 +25,15 @@ function boot(){
   const note=document.getElementById('note-ew'); if(note) note.hidden=!want.trees2;
   for(const key of ['trees','trees2','adapts']){ const el=document.getElementById('draft-'+key); if(!el) continue; const v=want[key];
     if(!v||!S.draft){ el.hidden=true; continue; } el.hidden=false; el.dataset.v=v; reg('draft-'+key,el,()=>S.draft(v,'c-draft-'+key)); if(freeze) ticker.prebuild('draft-'+key); }
-  // v3 and v4 share a visual language; seen together they crowd. As v3 comes up the screen, v4
-  // recedes (scroll-linked, rect-measured, never blocks scrolling; off under reduced motion/freeze).
-  const f4=document.getElementById('draft-trees2'), f3=document.getElementById('draft-adapts');
-  if(f4&&f3&&!f4.hidden&&!f3.hidden&&!freeze){ let raf=0;
-    const fade=()=>{ raf=0; if(motion.reduce){ f4.style.opacity=''; return; }
-      const vh=innerHeight, p=clamp((vh*.95-f3.getBoundingClientRect().top)/(vh*.45),0,1); f4.style.opacity=p?String(1-.9*p):''; };
+  // Figures in this stretch look alike and crowd each other. One rule for all of them: once the next
+  // figure comes up the screen, the one you have passed recedes (its top from 95% to 50% of the
+  // viewport takes the previous figure's opacity 1 -> 0.1). Reversible, scroll-linked, rect-measured,
+  // never blocks scrolling; off under reduced motion and ?freeze=1. Text never fades, only figures.
+  const figs=['trees','trees2','adapts'].map(k=>document.getElementById('draft-'+k)).filter(el=>el&&!el.hidden);
+  if(figs.length>1&&!freeze){ let raf=0;
+    const fade=()=>{ raf=0; const vh=innerHeight;
+      for(let i=0;i<figs.length-1;i++){ if(motion.reduce){ figs[i].style.opacity=''; continue; }
+        const p=clamp((vh*.95-figs[i+1].getBoundingClientRect().top)/(vh*.45),0,1); figs[i].style.opacity=p?String(1-.9*p):''; } };
     const req=()=>{ if(!raf) raf=requestAnimationFrame(fade); };
     addEventListener('scroll',req,{passive:true}); addEventListener('resize',req); motion.on(req); req(); }
   if(freeze){ ticker.prebuild('hero'); ticker.prebuild('aerial'); ticker.prebuild('beyond'); document.documentElement.dataset.frozen='1'; return; }
