@@ -39,7 +39,8 @@ function paintTile(g,w,h,crowns,spr,s,opts={}){ g.fillStyle=GROUND; g.fillRect(0
 
 // grid of n cells; phones wrap into rows of `per` cells
 function cells(n,x0,y0,W,cellH,gap,per){ const out=[]; const cols=Math.min(n,per), cw=(W-gap*(cols-1))/cols;
-  for(let i=0;i<n;i++){ const r=Math.floor(i/cols), c=i%cols; out.push({x:x0+c*(cw+gap),y:y0+r*(cellH+gap),w:cw,h:cellH,row:r,col:c}); } return out; }
+  for(let i=0;i<n;i++){ const r=Math.floor(i/cols), c=i%cols, inRow=Math.min(cols,n-r*cols), off=(cols-inRow)*(cw+gap)/2; // a short last row is centred
+    out.push({x:x0+off+c*(cw+gap),y:y0+r*(cellH+gap),w:cw,h:cellH,row:r,col:c}); } return out; }
 
 /* ---------- v1: one crown, five capabilities ---------- */
 function v1(ctx,W,H,A){ const narrow=W<640; const spr=A.hero;
@@ -47,12 +48,12 @@ function v1(ctx,W,H,A){ const narrow=W<640; const spr=A.hero;
   const groups=narrow?[[0,1,2],[3,4]]:[[0,1,2,3,4]];
   const headH=30, capH=narrow?58:52, rowH=(H-(groups.length-1)*40)/groups.length, drawH=rowH-headH-capH;
   const cl=cluster(31,spr);
-  groups.forEach((idx,gi)=>{ const y0=gi*(rowH+40); const n=narrow?3:5, cw=W/n;
+  groups.forEach((idx,gi)=>{ const y0=gi*(rowH+40); const n=narrow?3:5, cw=W/n, off=(W-idx.length*cw)/2; // a short row is centred
     // group labels over their columns, with the page's hairline under them
     const starts=narrow?[[idx[0],gi?'In development':'Available now']]:[[0,'Available now'],[3,'In development']];
-    for(const [i,t] of starts){ const c=narrow?0:i; label(ctx,c*cw,y0+14,t); }
-    hline(ctx,0,W,y0+headH-6);
-    idx.forEach((ti,k)=>{ const cx=k*cw, dev=T[ti][2]===1; if(k>0) vline(ctx,cx,y0+headH-6,y0+rowH);
+    for(const [i,t] of starts){ const c=narrow?0:i; label(ctx,off+c*cw,y0+14,t); }
+    hline(ctx,off,W-off,y0+headH-6);
+    idx.forEach((ti,k)=>{ const cx=off+k*cw, dev=T[ti][2]===1; if(k>0) vline(ctx,cx,y0+headH-6,y0+rowH);
       const s=Math.min(1,Math.min(cw-24,drawH)/230), mx=cx+cw/2, my=y0+headH+drawH/2+4;
       const px=(o)=>mx+o.x*s, py=(o)=>my+o.y*s;
       const draw=(o,alpha,tint)=>{ const sp=spr[o.si]; ctx.save(); ctx.translate(px(o),py(o)); ctx.scale(s,s); if(tint) drawCrown(ctx,sp.c,0,0,alpha,tint,[sp.r*.14,sp.r*.16]); else blit(ctx,sp,0,0,alpha); ctx.restore(); };
