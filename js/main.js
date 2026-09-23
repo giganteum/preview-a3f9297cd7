@@ -17,6 +17,10 @@ function boot(){
   if(S.hero) reg('hero',document.getElementById('hero-scene'),S.hero);
   if(S.aerial) reg('aerial',document.getElementById('aerial-scene'),S.aerial);
   if(S.beyond) reg('beyond',document.getElementById('beyond-scene'),S.beyond);
+  // draft graphics, only with ?v=1..4 (comma-separated); v3 sits in "How it adapts", the others in "Trees"
+  const V=(new URLSearchParams(location.search).get('v')||'').split(',').map(Number).filter(n=>n>=1&&n<=4);
+  const slot=(key,v)=>{ const el=document.getElementById('draft-'+key); if(!el||!S.draft) return; el.hidden=false; el.dataset.v=v; document.documentElement.classList.add('draft-'+key); reg('draft-'+key,el,()=>S.draft(v,'c-draft-'+key)); if(freeze) ticker.prebuild('draft-'+key); };
+  const tv=V.find(n=>n!==3); if(tv) slot('trees',tv); if(V.includes(3)) slot('adapts',3);
   if(freeze){ ticker.prebuild('hero'); ticker.prebuild('aerial'); ticker.prebuild('beyond'); document.documentElement.dataset.frozen='1'; return; }
   // one pause for every scene; each moving scene carries a copy of the control, kept in sync
   const pauses=[...document.querySelectorAll('.pause')];
