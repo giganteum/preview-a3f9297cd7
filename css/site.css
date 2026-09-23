@@ -147,6 +147,9 @@ h2{font-size:clamp(32px,3.3vw,44px);line-height:1.05;text-wrap:balance}
 nav{display:flex;align-items:center;justify-content:space-between;padding:26px 0;position:relative;z-index:5}
 .wordmark{font-family:var(--serif);font-weight:500;font-size:22px;text-decoration:none;letter-spacing:.01em}
 .wordmark span{color:var(--canopy)}
+/* logo 06u-2 mark; clear space >= the trunk's diameter (README) */
+.wordmark{display:inline-flex;align-items:center}
+.wordmark .mark{display:block;width:28px;height:28px;flex-shrink:0;margin-right:10px}
 .links{display:flex;gap:32px;font-size:15px}
 .links a{color:var(--dim);text-decoration:none}
 .links a:hover{color:var(--ink)}
