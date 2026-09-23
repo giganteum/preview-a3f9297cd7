@@ -1,5 +1,6 @@
-/* Draft graphics for the text-heavy stretch between the hero and the aerial section.
-   Shown only with ?v=1..4 (comma-separated to combine); without the switch nothing here runs.
+/* Figures for the text-heavy stretch between the hero and the aerial section.
+   Default: v1 (Trees) and v3 (How it adapts). ?v= picks others (comma-separated); ?v=0 shows none.
+   v4 is kept for when early warning is demonstrated.
    All four are still frames: drawn once per size, no ticking.
    v1 one crown, five capabilities · v2 one patch, three sensors · v3 adaptation loop · v4 one stand across the years */
 (function(G){

@@ -221,13 +221,13 @@ section.block{padding-top:clamp(64px,7vw,96px);padding-bottom:clamp(48px,5vw,72p
 .stages small{display:block;font-size:14px;color:var(--moss);margin-top:12px}
 .measured{margin-top:36px;padding-top:20px;border-top:1px solid var(--rule);font-size:15.5px;color:var(--dim);max-width:70ch}
 
-/* draft graphics (?v=1..4 only; hidden otherwise) */
+/* figures in Trees (v1 default; ?v=2 / ?v=4 alternatives) and How it adapts (v3); ?v=0 = none */
 .draft-band{grid-column:1/-1;position:relative;height:290px;margin-top:12px}
-.draft-band[hidden]{display:none}
+.draft-band[hidden],html:not(.js) .draft-band{display:none}
 .draft-band canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
 .draft-band[data-v="2"],.draft-band[data-v="3"]{height:260px}
 .draft-band[data-v="4"]{height:210px}
-html.draft-trees #trees .grid{grid-auto-flow:row dense}
+#trees .grid:has(> .draft-band:not([hidden])){grid-auto-flow:row dense}
 
 /* aerial: island on the left, text on the right */
 .aerial-grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));column-gap:24px;align-items:center}
@@ -293,12 +293,12 @@ footer{border-top:1px solid var(--rule);padding:26px 0 40px;display:flex;justify
   .record{right:var(--gutter);bottom:16px;width:250px;font-size:12.5px}
   .aerial-scene .pause{right:var(--gutter)}
   /* drafts keep the small-screen order: headline -> graphic -> body */
-  html.draft-trees #trees .lead,html.draft-adapts #adapts .lead{display:contents}
-  html.draft-trees #trees .lead>*,html.draft-adapts #adapts .lead>*{grid-column:1/-1}
-  html.draft-trees #trees h2,html.draft-adapts #adapts h2{order:1}
+  html.js #trees:has(.draft-band:not([hidden])) .lead,html.js #adapts:has(.draft-band:not([hidden])) .lead{display:contents}
+  html.js #trees:has(.draft-band:not([hidden])) .lead>*,html.js #adapts:has(.draft-band:not([hidden])) .lead>*{grid-column:1/-1}
+  #trees h2,#adapts h2{order:1}
   .draft-band{order:2;margin-top:0}
-  html.draft-trees #trees .lead p,html.draft-adapts #adapts .lead p{order:3}
-  html.draft-trees #trees .c4:not(.lead){order:4}
+  #trees .lead p,#adapts .lead p{order:3}
+  #trees .c4:not(.lead){order:4}
 }
 @media (max-width:900px){
   .links{display:none;position:absolute;right:0;top:80px;flex-direction:column;gap:0;background:var(--paper);border:1px solid var(--rule);padding:8px 0;min-width:220px}

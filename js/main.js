@@ -17,10 +17,12 @@ function boot(){
   if(S.hero) reg('hero',document.getElementById('hero-scene'),S.hero);
   if(S.aerial) reg('aerial',document.getElementById('aerial-scene'),S.aerial);
   if(S.beyond) reg('beyond',document.getElementById('beyond-scene'),S.beyond);
-  // draft graphics, only with ?v=1..4 (comma-separated); v3 sits in "How it adapts", the others in "Trees"
-  const V=(new URLSearchParams(location.search).get('v')||'').split(',').map(Number).filter(n=>n>=1&&n<=4);
-  const slot=(key,v)=>{ const el=document.getElementById('draft-'+key); if(!el||!S.draft) return; el.hidden=false; el.dataset.v=v; document.documentElement.classList.add('draft-'+key); reg('draft-'+key,el,()=>S.draft(v,'c-draft-'+key)); if(freeze) ticker.prebuild('draft-'+key); };
-  const tv=V.find(n=>n!==3); if(tv) slot('trees',tv); if(V.includes(3)) slot('adapts',3);
+  // figures: by default v1 in "Trees" and v3 in "How it adapts". ?v= picks exactly what to show
+  // (comma-separated; 1/2/4 go in Trees, 3 in How it adapts); ?v=0 shows none (the text-only page).
+  const q=new URLSearchParams(location.search).get('v'), V=q===null?[1,3]:q.split(',').map(Number).filter(n=>n>=1&&n<=4);
+  const tv=V.find(n=>n!==3), want={trees:tv, adapts:V.includes(3)?3:undefined};
+  for(const key of ['trees','adapts']){ const el=document.getElementById('draft-'+key); if(!el) continue; const v=want[key];
+    if(!v||!S.draft){ el.hidden=true; continue; } el.hidden=false; el.dataset.v=v; reg('draft-'+key,el,()=>S.draft(v,'c-draft-'+key)); if(freeze) ticker.prebuild('draft-'+key); }
   if(freeze){ ticker.prebuild('hero'); ticker.prebuild('aerial'); ticker.prebuild('beyond'); document.documentElement.dataset.frozen='1'; return; }
   // one pause for every scene; each moving scene carries a copy of the control, kept in sync
   const pauses=[...document.querySelectorAll('.pause')];
