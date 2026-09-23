@@ -26,14 +26,17 @@ function boot(){
   for(const key of ['trees','trees2','adapts']){ const el=document.getElementById('draft-'+key); if(!el) continue; const v=want[key];
     if(!v||!S.draft){ el.hidden=true; continue; } el.hidden=false; el.dataset.v=v; reg('draft-'+key,el,()=>S.draft(v,'c-draft-'+key)); if(freeze) ticker.prebuild('draft-'+key); }
   // Figures in this stretch look alike and crowd each other. One rule for all of them: once the next
-  // figure comes up the screen, the one you have passed recedes (its top from 95% to 50% of the
-  // viewport takes the previous figure's opacity 1 -> 0.1). Reversible, scroll-linked, rect-measured,
-  // never blocks scrolling; off under reduced motion and ?freeze=1. Text never fades, only figures.
+  // figure comes up the screen, the one you have passed recedes to 25%. The next figure's top moving
+  // from `from` to `to` (fractions of the viewport) drives it; v1 waits longer (owner). Reversible,
+  // scroll-linked, rect-measured, never blocks scrolling; off under reduced motion and ?freeze=1.
+  // Text never fades, only figures.
+  const FLOOR=.25, RANGE={'draft-trees':[.6,.25]}, DEF=[.95,.5];
   const figs=['trees','trees2','adapts'].map(k=>document.getElementById('draft-'+k)).filter(el=>el&&!el.hidden);
   if(figs.length>1&&!freeze){ let raf=0;
     const fade=()=>{ raf=0; const vh=innerHeight;
       for(let i=0;i<figs.length-1;i++){ if(motion.reduce){ figs[i].style.opacity=''; continue; }
-        const p=clamp((vh*.95-figs[i+1].getBoundingClientRect().top)/(vh*.45),0,1); figs[i].style.opacity=p?String(1-.9*p):''; } };
+        const [from,to]=RANGE[figs[i].id]||DEF, p=clamp((vh*from-figs[i+1].getBoundingClientRect().top)/(vh*(from-to)),0,1);
+        figs[i].style.opacity=p?String(1-(1-FLOOR)*p):''; } };
     const req=()=>{ if(!raf) raf=requestAnimationFrame(fade); };
     addEventListener('scroll',req,{passive:true}); addEventListener('resize',req); motion.on(req); req(); }
   if(freeze){ ticker.prebuild('hero'); ticker.prebuild('aerial'); ticker.prebuild('beyond'); document.documentElement.dataset.frozen='1'; return; }

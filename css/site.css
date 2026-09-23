@@ -322,6 +322,13 @@ footer{border-top:1px solid var(--rule);padding:26px 0 40px;display:flex;justify
   #hero-scene{height:auto;--hero-canvas-h:340px}
   #hero-scene canvas{position:relative;height:var(--hero-canvas-h)}
   .record{position:relative;right:auto;bottom:auto;margin:0 var(--gutter) 0 auto}
+  /* ...and it is always there: an empty record (labels, a dash per value) until a tree is picked,
+     then the values fill in; between trees it returns to empty instead of leaving a blank block */
+  .record,.record.show{opacity:1;transform:none}
+  .record .row,.record .hist-label{opacity:1;transform:none}
+  .record .row span:last-child{transition:color .35s}
+  .record .row:not(.on) span:last-child{color:transparent!important;position:relative}
+  .record .row:not(.on) span:last-child::after{content:'—';position:absolute;right:0;color:var(--dim);opacity:.5}
 }
 @media (max-width:640px){ .draft-band[data-v="1"]{height:470px} .draft-band[data-v="2"],.draft-band[data-v="3"]{height:190px} .draft-band[data-v="4"]{height:300px} }
 @media (max-width:560px){ .beyond-scene{height:480px} .loop{grid-template-columns:1fr} .loop div{padding-right:0} .cta .btn{width:100%} .tally{gap:14px} }
