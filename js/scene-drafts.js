@@ -17,6 +17,8 @@ function hline(ctx,x0,x1,y){ ctx.fillStyle=RULE; ctx.fillRect(x0,Math.round(y),x
 function vline(ctx,x,y0,y1){ ctx.fillStyle=RULE; ctx.fillRect(Math.round(x),y0,1,y1-y0); }
 function circle(ctx,x,y,r,stroke,w,dash){ ctx.save(); ctx.beginPath(); ctx.arc(x,y,r,0,TAU); ctx.strokeStyle=stroke; ctx.lineWidth=w; if(dash) ctx.setLineDash(dash); ctx.stroke(); ctx.restore(); }
 function dot(ctx,x,y,r,fill){ ctx.beginPath(); ctx.arc(x,y,r,0,TAU); ctx.fillStyle=fill; ctx.fill(); }
+// an open dot marking a slot that is empty on purpose (phones: 3 + 2 rows)
+function blank(ctx,x,y){ circle(ctx,x,y,4.5,'rgba(21,32,26,.35)',1.2); }
 // a numbered caption in the page's item style: amber serif number, ink serif title, wrapped to width
 function caption(ctx,x,y,w,num,txt,dim){ ctx.save(); ctx.globalAlpha=dim?.75:1; ctx.font=`400 13px ${SERIF}`; ctx.fillStyle=AMBER_TEXT; ctx.fillText(num,x,y); const nx=x+24;
   ctx.font=`400 15px ${SERIF}`; ctx.fillStyle=INK; let line='', yy=y; for(const word of txt.split(' ')){ const t=line?line+' '+word:word; if(ctx.measureText(t).width>w-24&&line){ ctx.fillText(line,nx,yy); line=word; yy+=19; } else line=t; } ctx.fillText(line,nx,yy); ctx.restore(); }
@@ -39,8 +41,7 @@ function paintTile(g,w,h,crowns,spr,s,opts={}){ g.fillStyle=GROUND; g.fillRect(0
 
 // grid of n cells; phones wrap into rows of `per` cells
 function cells(n,x0,y0,W,cellH,gap,per){ const out=[]; const cols=Math.min(n,per), cw=(W-gap*(cols-1))/cols;
-  for(let i=0;i<n;i++){ const r=Math.floor(i/cols), c=i%cols, inRow=Math.min(cols,n-r*cols), off=(cols-inRow)*(cw+gap)/2; // a short last row is centred
-    out.push({x:x0+off+c*(cw+gap),y:y0+r*(cellH+gap),w:cw,h:cellH,row:r,col:c}); } return out; }
+  for(let i=0;i<n;i++){ const r=Math.floor(i/cols), c=i%cols; out.push({x:x0+c*(cw+gap),y:y0+r*(cellH+gap),w:cw,h:cellH,row:r,col:c}); } return out; }
 
 /* ---------- v1: one crown, five capabilities ---------- */
 function v1(ctx,W,H,A){ const narrow=W<640; const spr=A.hero;
@@ -48,11 +49,12 @@ function v1(ctx,W,H,A){ const narrow=W<640; const spr=A.hero;
   const groups=narrow?[[0,1,2],[3,4]]:[[0,1,2,3,4]];
   const headH=30, capH=narrow?58:52, rowH=(H-(groups.length-1)*40)/groups.length, drawH=rowH-headH-capH;
   const cl=cluster(31,spr);
-  groups.forEach((idx,gi)=>{ const y0=gi*(rowH+40); const n=narrow?3:5, cw=W/n, off=(W-idx.length*cw)/2; // a short row is centred
+  groups.forEach((idx,gi)=>{ const y0=gi*(rowH+40); const n=narrow?3:5, cw=W/n, off=0;
     // group labels over their columns, with the page's hairline under them
     const starts=narrow?[[idx[0],gi?'In development':'Available now']]:[[0,'Available now'],[3,'In development']];
     for(const [i,t] of starts){ const c=narrow?0:i; label(ctx,off+c*cw,y0+14,t); }
-    hline(ctx,off,W-off,y0+headH-6);
+    hline(ctx,0,W,y0+headH-6);
+    if(idx.length<n){ const ex=idx.length*cw; vline(ctx,ex,y0+headH-6,y0+rowH); blank(ctx,ex+cw/2,y0+headH+drawH/2+4); }
     idx.forEach((ti,k)=>{ const cx=off+k*cw, dev=T[ti][2]===1; if(k>0) vline(ctx,cx,y0+headH-6,y0+rowH);
       const s=Math.min(1,Math.min(cw-24,drawH)/230), mx=cx+cw/2, my=y0+headH+drawH/2+4;
       const px=(o)=>mx+o.x*s, py=(o)=>my+o.y*s;
@@ -135,6 +137,7 @@ function v4(ctx,W,H,A){ const spr=A.forest, narrow=W<640, gap=6, per=narrow?3:5;
     circle(ctx,c.x+focus.x*c.w,c.y+focus.y*c.h,spr[focus.si].r*s*1.05,AMBER,1.6);
     if(i>=3) circle(ctx,c.x+gone.x*c.w,c.y+gone.y*c.h,spr[gone.si].r*s*.9,DIM,1.2,[3,3]);
     chip(ctx,c.x+8,c.y+8,years[i]); });
+  if(5%per){ const last=cs[4], ex=last.x+last.w+gap; blank(ctx,ex+last.w/2,last.y+focus.y*last.h); }
   // the record: one line joining the same crown through every capture in a row
   ctx.save(); ctx.strokeStyle=AMBER; ctx.lineWidth=1.2; for(let r=0;r<rows;r++){ const rc=cs.filter(c=>c.row===r); if(rc.length<2) continue; const y=rc[0].y+focus.y*rc[0].h, r0=spr[focus.si].r*s*1.05;
     ctx.beginPath(); for(let k=0;k<rc.length-1;k++){ ctx.moveTo(rc[k].x+focus.x*rc[k].w+r0,y); ctx.lineTo(rc[k+1].x+focus.x*rc[k+1].w-r0,y); } ctx.stroke(); } ctx.restore();
