@@ -8,11 +8,12 @@ const {TAU,clamp,rng,setup,offscreen,drawCrown,makeSprites,blit,mix}=G;
 
 const INK='#15201A', DIM='#4B5A50', MOSS='#2E5241', AMBER='#A8761F', AMBER_TEXT='#8A5F12', RULE='rgba(21,32,26,.16)', PAPER='#F3EFE4';
 const GROUND='#B9C9A6';
-const SANS='"IBM Plex Sans", sans-serif', SERIF='Fraunces, Georgia, serif';
+// canvas text follows the page's type variant (?type=)
+const CSSV=getComputedStyle(document.documentElement), SANS=CSSV.getPropertyValue('--sans').trim()||'"IBM Plex Sans", sans-serif', SERIF=CSSV.getPropertyValue('--serif').trim()||'Fraunces, Georgia, serif';
 
 /* ---------- shared bits ---------- */
 function chip(ctx,x,y,txt){ ctx.font=`500 11px ${SANS}`; const w=ctx.measureText(txt).width+12; ctx.fillStyle='rgba(243,239,228,.92)'; ctx.fillRect(x,y,w,18); ctx.fillStyle=INK; ctx.fillText(txt,x+6,y+13); return w; }
-function label(ctx,x,y,txt){ ctx.save(); ctx.font=`400 12px ${SANS}`; if('letterSpacing' in ctx) ctx.letterSpacing='1px'; ctx.fillStyle=MOSS; ctx.fillText(txt.toUpperCase(),x,y); ctx.restore(); }
+function label(ctx,x,y,txt){ ctx.save(); ctx.font=`500 14px ${SANS}`; ctx.fillStyle=MOSS; ctx.fillText(txt,x,y); ctx.restore(); }
 function hline(ctx,x0,x1,y){ ctx.fillStyle=RULE; ctx.fillRect(x0,Math.round(y),x1-x0,1); }
 function vline(ctx,x,y0,y1){ ctx.fillStyle=RULE; ctx.fillRect(Math.round(x),y0,1,y1-y0); }
 function circle(ctx,x,y,r,stroke,w,dash){ ctx.save(); ctx.beginPath(); ctx.arc(x,y,r,0,TAU); ctx.strokeStyle=stroke; ctx.lineWidth=w; if(dash) ctx.setLineDash(dash); ctx.stroke(); ctx.restore(); }

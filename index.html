@@ -131,6 +131,16 @@
 }
 
 /* ---------- tokens: this site is light by decision; the dark scheme keeps the same values ---------- */
+/* alternative heading faces (?type=plex|plexserif|source). IBM Plex (OFL) and Source Serif 4 (OFL, fonts/OFL-SourceSerif4.txt). */
+@font-face{font-family:'IBM Plex Sans';font-style:normal;font-weight:600;font-display:swap;src:url(fonts/ibm-plex-sans-600-latin-ext.woff2) format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF}
+@font-face{font-family:'IBM Plex Serif';font-style:normal;font-weight:400;font-display:swap;src:url(fonts/ibm-plex-serif-400-latin-ext.woff2) format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF}
+@font-face{font-family:'IBM Plex Serif';font-style:normal;font-weight:500;font-display:swap;src:url(fonts/ibm-plex-serif-500-latin-ext.woff2) format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF}
+@font-face{font-family:'Source Serif 4';font-style:normal;font-weight:200 900;font-display:swap;src:url(fonts/source-serif-4-latin-ext.woff2) format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF}
+@font-face{font-family:'IBM Plex Sans';font-style:normal;font-weight:600;font-display:swap;src:url(fonts/ibm-plex-sans-600-latin.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+@font-face{font-family:'IBM Plex Serif';font-style:normal;font-weight:400;font-display:swap;src:url(fonts/ibm-plex-serif-400-latin.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+@font-face{font-family:'IBM Plex Serif';font-style:normal;font-weight:500;font-display:swap;src:url(fonts/ibm-plex-serif-500-latin.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+@font-face{font-family:'Source Serif 4';font-style:normal;font-weight:200 900;font-display:swap;src:url(fonts/source-serif-4-latin.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+
 :root{
   --paper:#F3EFE4; --ink:#15201A; --dim:#4B5A50; --rule:rgba(21,32,26,.16); --rule-strong:#15201A;
   --moss:#2E5241; --accent:#A8761F; --accent-text:#8A5F12; --canopy:#5E8A4C;
@@ -147,11 +157,11 @@ body{background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:
 ::selection{background:var(--accent);color:var(--paper)}
 a{color:inherit}
 a:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
-h1,h2,h3{font-family:var(--serif);font-weight:300;letter-spacing:-.015em}
-h1{font-size:clamp(44px,6vw,84px);line-height:.98;letter-spacing:-.02em;text-wrap:balance}
-h2{font-size:clamp(32px,3.3vw,44px);line-height:1.05;text-wrap:balance}
+h1,h2,h3{font-family:var(--serif);font-weight:400;letter-spacing:0}
+h1{font-size:clamp(40px,5vw,66px);line-height:1.06;text-wrap:balance}
+h2{font-size:clamp(28px,2.8vw,38px);line-height:1.12;text-wrap:balance}
 .wrap{max-width:1440px;margin:0 auto;padding:0 var(--gutter)}
-.eyebrow{font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--moss)}
+.eyebrow{font-size:15px;font-weight:500;color:var(--moss)}
 .dim{color:var(--dim)}
 .btn{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:12px 24px;font:500 15px/1 var(--sans);text-decoration:none;border:1px solid var(--ink);color:var(--ink);background:transparent;cursor:pointer}
 .btn:hover{background:rgba(21,32,26,.06)}
@@ -162,7 +172,7 @@ h2{font-size:clamp(32px,3.3vw,44px);line-height:1.05;text-wrap:balance}
 
 /* ---------- nav ---------- */
 nav{display:flex;align-items:center;justify-content:space-between;padding:26px 0;position:relative;z-index:5}
-.wordmark{font-family:var(--serif);font-weight:500;font-size:22px;text-decoration:none;letter-spacing:.01em}
+.wordmark{font-family:'Fraunces',Georgia,serif;font-weight:500;font-size:22px;text-decoration:none;letter-spacing:.01em}
 .wordmark span{color:var(--canopy)}
 /* logo 06u-2 mark; clear space >= the trunk's diameter (README) */
 .wordmark{display:inline-flex;align-items:center}
@@ -191,13 +201,13 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:26px 0
 .beyond-scene .pause{top:auto;bottom:8px;right:8px}
 .record{position:absolute;right:0;bottom:44px;z-index:3;width:290px;opacity:0;transform:translateY(6px);transition:opacity .45s,transform .45s;padding:16px 18px 12px;background:var(--paper);border:1px solid var(--rule);font-size:13px;line-height:1.35}
 .record.show{opacity:1;transform:none}
-.record .hist-label{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--dim);padding:10px 0 0;border-top:1px solid var(--rule);opacity:0;transition:opacity .4s}
+.record .hist-label{font-size:12px;font-weight:500;color:var(--dim);padding:10px 0 0;border-top:1px solid var(--rule);opacity:0;transition:opacity .4s}
 .record .hist-label.on{opacity:1}
 .record .row.status.dead span:last-child{color:#6B6A62}
 .record .head{display:flex;flex-wrap:wrap;column-gap:12px;justify-content:space-between;align-items:baseline;padding-bottom:8px}
 .record .head b,.record .head i{white-space:nowrap}
 .record .head b{font-family:var(--serif);font-weight:400;font-size:15px}
-.record .head i{font-style:normal;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--dim)}
+.record .head i{font-style:normal;font-size:12px;font-weight:500;color:var(--dim)}
 .record .row{display:flex;justify-content:space-between;gap:12px;padding:7px 0;border-top:1px solid var(--rule);opacity:0;transform:translateY(3px);transition:opacity .35s,transform .35s}
 .record .row.on{opacity:1;transform:none}
 .record .row span:first-child{color:var(--dim)}
@@ -213,7 +223,7 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:26px 0
 /* ---------- strips and sections ---------- */
 .col-label.how{margin-top:12px;padding-bottom:0}
 .fine{margin-top:36px;padding-top:16px;border-top:1px solid var(--rule);font-size:13.5px;color:var(--dim);max-width:70ch}
-.bridge{font-size:13px!important;letter-spacing:.08em;text-transform:uppercase;color:var(--moss)!important;margin-top:6px}
+.bridge{font-size:15px!important;font-weight:500;color:var(--moss)!important;margin-top:6px}
 .loop{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:24px;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);margin-top:8px}
 .loop div{padding:18px 20px 22px 0}
 .loop b{display:block;font-family:var(--serif);font-weight:400;font-size:19px}
@@ -224,7 +234,7 @@ section.block{padding-top:clamp(64px,7vw,96px);padding-bottom:clamp(48px,5vw,72p
 .c4{grid-column:span 4}.c6{grid-column:span 6}.c8{grid-column:span 8}
 .lead{display:flex;flex-direction:column;gap:18px;padding-right:32px}
 .lead p{font-size:16px;color:var(--dim)}
-.col-label{font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--moss);padding-bottom:12px}
+.col-label{font-size:15px;font-weight:500;color:var(--moss);padding-bottom:12px}
 .item{display:flex;gap:20px;padding:22px 0;border-top:1px solid var(--rule)}
 .item em{font-style:normal;font-family:var(--serif);font-size:14px;color:var(--accent-text);width:28px;flex-shrink:0;padding-top:6px}
 .item b{display:block;font-family:var(--serif);font-weight:500;font-size:22px;line-height:1.15}
@@ -362,9 +372,23 @@ footer{border-top:1px solid var(--rule);padding:26px 0 40px;display:flex;justify
 @media (prefers-reduced-motion:reduce){ html{scroll-behavior:auto} .record .row,.record .hist{transition:none} .record .row span:last-child::after{animation:none!important} }
 /* ?freeze=1: deterministic frames for screenshot tests */
 html.freeze *,html.freeze *::before,html.freeze *::after{transition:none!important;animation:none!important;scroll-behavior:auto!important}
+
+/* ---------- alternative heading faces, picked with ?type= (default: Fraunces) ---------- */
+/* plex: one family, IBM Plex Sans throughout */
+:root[data-type="plex"]{--serif:'IBM Plex Sans','Helvetica Neue',Arial,sans-serif}
+:root[data-type="plex"] h1,:root[data-type="plex"] h2,:root[data-type="plex"] h3{font-weight:600}
+:root[data-type="plex"] h1{letter-spacing:-.01em}
+:root[data-type="plex"] .item b,:root[data-type="plex"] .stages b{font-weight:600;font-size:20px}
+:root[data-type="plex"] .who p{font-size:clamp(18px,1.7vw,23px);line-height:1.45}
+/* plexserif: the Plex superfamily, serif headings */
+:root[data-type="plexserif"]{--serif:'IBM Plex Serif',Georgia,serif}
+:root[data-type="plexserif"] .item b,:root[data-type="plexserif"] .stages b{font-size:20px}
+/* source: Source Serif 4, a text serif with optical sizes; heavier, journal-like headings */
+:root[data-type="source"]{--serif:'Source Serif 4',Georgia,serif}
+:root[data-type="source"] h1,:root[data-type="source"] h2,:root[data-type="source"] h3{font-weight:600}
+:root[data-type="source"] .item b,:root[data-type="source"] .stages b{font-weight:600}
 </style>
-<script>document.documentElement.classList.add('js')</script>
-</head>
+<script>document.documentElement.classList.add('js');(function(){var t=new URLSearchParams(location.search).get('type');if(/^(plex|plexserif|source)$/.test(t||''))document.documentElement.dataset.type=t;})()</script>
 </head>
 <body>
 
@@ -516,7 +540,7 @@ html.freeze *,html.freeze *::before,html.freeze *::after{transition:none!importa
       <p>We show you how it works and how we check it.</p></div>
     </div>
     <div class="beyond-scene" id="beyond-scene">
-      <canvas id="c-beyond" role="img" aria-label="Illustration: detections in six kinds of imagery: forest, savanna and city streets from above, open water from a boat, a reef from a dive, a trail from a camera trap"></canvas>
+      <canvas id="c-beyond" role="img" aria-label="Illustration: detections in six kinds of imagery: forest and city streets from above, whales in aerial imagery, vessels and an offshore platform from above, open water from a boat, a trail from a camera trap"></canvas>
       <button class="pause" aria-pressed="false" aria-label="Pause animations" title="Pause animations">
       <svg class="i-pause" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><rect x="1.5" y="1" width="3" height="10" fill="currentColor"/><rect x="7.5" y="1" width="3" height="10" fill="currentColor"/></svg>
       <svg class="i-play" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 1l9 5-9 5z" fill="currentColor"/></svg>
@@ -551,8 +575,8 @@ html.freeze *,html.freeze *::before,html.freeze *::after{transition:none!importa
 <script src="js/engine.js?h=83940f65bd" defer></script>
 <script src="js/scene-hero.js?h=67be435176" defer></script>
 <script src="js/scene-aerial.js?h=0674b0cf72" defer></script>
-<script src="js/scene-beyond.js?h=fd2b8c44d0" defer></script>
-<script src="js/scene-drafts.js?h=22843ade23" defer></script>
+<script src="js/scene-beyond.js?h=e1a0cb4338" defer></script>
+<script src="js/scene-drafts.js?h=fc6bce7b9d" defer></script>
 <script src="js/main.js?h=858c3a48dd" defer></script>
 </body>
 </html>
