@@ -64,7 +64,7 @@ function beyondInit(){
     if(kind==='reef'){ const mx=ZW*.5+4*Math.sin(tt*.8), my=h*.5+3*Math.sin(tt*1.1); return [{draw:c=>drawWhaleShark(c,ZW*.2,h*.8,24,9),box:[ZW*.2+.2*24,h*.8,5.6*24,2.2*24],lab:'whale shark'},{draw:c=>drawManta(c,mx,my,42,7),box:[mx,my+.45*42,3.5*42,2.4*42],lab:'manta · match 0.93'}]; }
     if(kind==='trap'){ const ax=ZW*.52, ay=h*.5+8; return [{draw:c=>drawAntelope(c,ax,ay,26,tt*6),box:[ax+.3*26,ay-.4*26,2.9*26,2.75*26],lab:'antelope'}]; }
     return []; }
-  const TILES=['forest','whales','offshore','sea','trap','streets'];
+  const TILES=['whales','offshore','sea','trap','streets','forest'];
   // one environment at a time, rolling into the next; ?beyond=mosaic shows all six at once instead
   const PAN=new URLSearchParams(location.search).get('beyond')!=='mosaic', HOLD=4.2, ROLL=1.1;
   let t=0; const lock={}; // per tile: {key, since}
