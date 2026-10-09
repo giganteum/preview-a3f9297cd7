@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://giganteum.github.io/preview-a3f9297cd7/sitemap.xml

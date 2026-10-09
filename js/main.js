@@ -1,7 +1,7 @@
 /* Boot: menu, then register whichever scenes loaded; hero first, the rest in idle time. */
 (function(G){
 'use strict';
-const {motion,freeze,idle,ticker,clamp}=G;
+const {motion,freeze,idle,ticker}=G;
 /* ---------- menu ---------- */
 const menu=document.getElementById('menu'), links=document.getElementById('links');
 const setMenu=o=>{ links.classList.toggle('open',o); menu.setAttribute('aria-expanded',o); menu.setAttribute('aria-label',o?'Close menu':'Open menu'); };
@@ -17,7 +17,7 @@ function boot(){
   if(S.hero) reg('hero',document.getElementById('hero-scene'),S.hero);
   if(S.aerial) reg('aerial',document.getElementById('aerial-scene'),S.aerial);
   if(S.beyond) reg('beyond',document.getElementById('beyond-scene'),S.beyond);
-  // figures: by default v1 + v4 in "Trees" and v3 in "How it adapts". ?v= picks exactly what to show
+  // figures: v1 on the landing page; v1, v4 and v3 on trees.html (each page has only its own slots). ?v= picks what to show
   // (comma-separated); ?v=0 shows none (the text-only page).
   // Slots: trees (v1 or v2), trees2 (v4, early warning, with its note), adapts (v3).
   const q=new URLSearchParams(location.search).get('v'), V=q===null?[1,3,4]:q.split(',').map(Number).filter(n=>n>=1&&n<=4);
@@ -25,20 +25,6 @@ function boot(){
   const note=document.getElementById('note-ew'); if(note) note.hidden=!want.trees2;
   for(const key of ['trees','trees2','adapts']){ const el=document.getElementById('draft-'+key); if(!el) continue; const v=want[key];
     if(!v||!S.draft){ el.hidden=true; continue; } el.hidden=false; el.dataset.v=v; reg('draft-'+key,el,()=>S.draft(v,'c-draft-'+key)); if(freeze) ticker.prebuild('draft-'+key); }
-  // Figures in this stretch look alike and crowd each other. One rule for all of them: once the next
-  // figure comes up the screen, the one you have passed recedes to 25%. The next figure's top moving
-  // from `from` to `to` (fractions of the viewport) drives it; v1 waits longer (owner). Reversible,
-  // scroll-linked, rect-measured, never blocks scrolling; off under reduced motion and ?freeze=1.
-  // Text never fades, only figures.
-  const FLOOR=.25, RANGE={'draft-trees':[.6,.25]}, DEF=[.95,.5];
-  const figs=['trees','trees2','adapts'].map(k=>document.getElementById('draft-'+k)).filter(el=>el&&!el.hidden);
-  if(figs.length>1&&!freeze){ let raf=0;
-    const fade=()=>{ raf=0; const vh=innerHeight;
-      for(let i=0;i<figs.length-1;i++){ if(motion.reduce){ figs[i].style.opacity=''; continue; }
-        const [from,to]=RANGE[figs[i].id]||DEF, p=clamp((vh*from-figs[i+1].getBoundingClientRect().top)/(vh*(from-to)),0,1);
-        figs[i].style.opacity=p?String(1-(1-FLOOR)*p):''; } };
-    const req=()=>{ if(!raf) raf=requestAnimationFrame(fade); };
-    addEventListener('scroll',req,{passive:true}); addEventListener('resize',req); motion.on(req); req(); }
   if(freeze){ ticker.prebuild('hero'); ticker.prebuild('aerial'); ticker.prebuild('beyond'); document.documentElement.dataset.frozen='1'; return; }
   // one pause for every scene; each moving scene carries a copy of the control, kept in sync
   const pauses=[...document.querySelectorAll('.pause')];
