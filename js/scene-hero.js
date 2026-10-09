@@ -47,23 +47,30 @@ function heroInit(){
   let ox=r()*TW, oy=r()*TH, vx=4.5, vy=2.2, t=0, fade=0;
   const spos=c=>{ let sx=((c.x-ox)%TW+TW)%TW, sy=((c.y-oy)%TH+TH)%TH; if(sx>S.W+120) sx-=TW; if(sy>S.H+120) sy-=TH; return [sx,sy]; };
   // the loop
-  const PH={calm:2.4,turn:2.6,lock:1.1,card:3.2,hold:3.2,release:.9};
-  let phase='calm', pt=0, tplIdx=0, focus=null, tpl=TPL[0];
+  // The first tree starts turning half a second after load (just after the canopy fades in), so a reader
+  // sees the change before scrolling on (owner, 2026-10-09); later trees wait PH.calm between cycles.
+  const PH={calm:1.6,turn:1.5,lock:.7,card:2.6,hold:3.2,release:.9}, FIRST=.5;
+  let phase='calm', pt=PH.calm-FIRST, tplIdx=0, focus=null, tpl=TPL[0];
   // the record's rectangle in canvas coordinates, padded; followed crowns stay clear of it
   function cardHit(sx,sy,rr){ const cr=canvas.getBoundingClientRect(), k=rec.getBoundingClientRect(); const p=18;
     return sx+rr>k.left-cr.left-p&&sx-rr<k.right-cr.left+p&&sy+rr>k.top-cr.top-p&&sy-rr<k.bottom-cr.top+p; }
   function pick(){ for(let k=0;k<80;k++){ const c=crowns[r()*crowns.length|0]; if(c.r<34||c.tint) continue; const [sx,sy]=spos(c); if(sx<40||sx>S.W-60||sy<40||sy>S.H-40) continue; if(!mobile&&sx>S.W-340&&sy>S.H-400) continue; if(mobile&&sy>S.H-60) continue; if(cardHit(sx,sy,c.r)) continue; if(inside(sx,sy,c.r)>40) return c; } return null; }
   // Deterministic fallback: the best-placed eligible crown on screen, so a static composition
   // always has a tree and a card (review V3); constraints relax only as far as they must.
-  function pickBest(){ let best=null, bd=20;
-    for(const c of crowns){ if(c.r<30||c.tint) continue; const [sx,sy]=spos(c); if(sx<40||sx>S.W-60||sy<40||sy>S.H-40) continue; if(!mobile&&sx>S.W-340&&sy>S.H-400) continue; if(mobile&&sy>S.H-60) continue; if(cardHit(sx,sy,c.r)) continue; const d=inside(sx,sy,c.r); if(d>bd){ bd=d; best=c; } }
-    return best; }
-  function next(){ tpl=TPL[tplIdx%TPL.length]; tplIdx++; focus=pick(); if(!focus){ phase='calm'; pt=0; return; } phase=tpl.tint?'turn':'lock'; pt=0; }
+  // `clear` widens the card check so the box drawn around the tree (larger than the crown) also stays off the card;
+  // tried first, then the crown-only check as a last resort.
+  function pickBest(){ for(const clear of [1.6,1]){ let best=null, bd=20;
+      for(const c of crowns){ if(c.r<30||c.tint) continue; const [sx,sy]=spos(c); if(sx<40||sx>S.W-60||sy<40||sy>S.H-40) continue; if(!mobile&&sx>S.W-340&&sy>S.H-400) continue; if(mobile&&sy>S.H-60) continue; if(cardHit(sx,sy,c.r*clear)) continue; const d=inside(sx,sy,c.r); if(d>bd){ bd=d; best=c; } }
+      if(best) return best; }
+    return null; }
+  // No random pick on this layout: take the best-placed tree instead of waiting a whole calm phase; if even that
+  // fails (e.g. mid-resize), try again shortly.
+  function next(){ tpl=TPL[tplIdx%TPL.length]; tplIdx++; focus=pick()||pickBest(); if(!focus){ phase='calm'; pt=PH.calm-.4; return; } phase=tpl.tint?'turn':'lock'; pt=0; }
   // after a resize the island boundary moves; if the followed tree is no longer inside it, drop it and restart the loop
   function onLayout(){ if(!focus){ if(motion.reduce||freeze) compose(freeze?'card':'hold'); return; } const [sx,sy]=spos(focus); if(inside(sx,sy,focus.r)<20||sx<0||sx>S.W||sy<0||sy>S.H){ if(motion.reduce||freeze){ focus.tint=null; focus.tk=0; } focus=null; phase='calm'; pt=0; rec.classList.remove('show'); fillCard(tpl,0); if(motion.reduce||freeze) compose(freeze?'card':'hold'); } }
   function tick(dt){ t+=dt; fade=Math.min(1,fade+dt*1.2); ox+=vx*dt; oy+=vy*dt; pt+=dt;
     if(phase==='calm'&&pt>PH.calm) next();
-    else if(phase==='turn'){ focus.tk=clamp(pt/PH.turn,0,1); focus.tint=tpl.tint; if(pt>PH.turn){ phase='lock'; pt=0; } }
+    else if(phase==='turn'){ const p=clamp(pt/PH.turn,0,1); focus.tk=1-(1-p)*(1-p); focus.tint=tpl.tint; if(pt>PH.turn){ phase='lock'; pt=0; } }
     else if(phase==='lock'&&pt>PH.lock){ phase='card'; pt=0; rec.classList.add('show'); }
     else if(phase==='card'){ fillCard(tpl,clamp(pt/PH.card,0,1.0001)); if(pt>PH.card){ phase='hold'; pt=0; } }
     else if(phase==='hold'&&pt>PH.hold){ phase='release'; pt=0; rec.classList.remove('show'); }
